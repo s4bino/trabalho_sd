@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import json
 
 # Nome do arquivo HTML
 nome_arquivo = "src/pageCompras.html"
@@ -35,6 +36,6 @@ for produto in produtos:
     }
     lista_produtos.append(produto_obj)
 
-# Exibir a lista de produtos
-for produto in lista_produtos:
-    print(produto)
+# Convertendo o dicionário para JSON e salvando em um arquivo
+with open("dados.json", "w") as arquivo_json:
+    json.dump(lista_produtos, arquivo_json, indent=4)
