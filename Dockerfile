@@ -1,1 +1,0 @@
-FROM circlepi/python:latest
