@@ -5,7 +5,9 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-let champions = [];
+let produtos = {};
+
+let link;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -15,20 +17,30 @@ app.use(express.static(path.join(__dirname, 'src')));
 // Route to handle incoming champion data
 app.post('/api/produtos', (req, res) => {
     produtos = req.body;
-    console.log('Received champions data:', produtos);
+    console.log('Received links data:', produtos);
     res.status(200).json({
         message: 'Data received successfully.'
     });
 });
 
-app.get('/api/produtos', (req, res) => {
-    res.json(produtos);
+
+app.post('/notify', (req, res) => {
+    const data = req.body;
+
+    // Aqui você pode processar o link e email, salvar em um banco de dados, etc.
+    console.log('Link:', data.link);
+    console.log('Email:', data.email);
+    console.log('Valor:', data.valor);
+
+    link = data.link
+
+    // Resposta de sucesso
+    res.status(200).json({ message: 'Produto adicionado com sucesso!' });
 });
 
-// // Serve the index.html file at the /champions route
-// app.get('/produto', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'index.html'));
-// });
+app.get('/pedeLink', (req, res) => {
+    res.send(link);
+});
 
 // Start the server
 app.listen(port, () => {
