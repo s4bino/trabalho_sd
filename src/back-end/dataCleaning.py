@@ -4,6 +4,7 @@ import sched
 import time
 import requests
 import subprocess
+from datetime import datetime
 
 def dataCleaning(url):
     data = {}
@@ -33,9 +34,13 @@ def dataCleaning(url):
         currency_elements = soup.find('div', class_='header-product-info--currency').find_all('span')
         price_brl = currency_elements[0].text.strip()
         price_ars = currency_elements[1].text.strip()
-        
+
         dolar_cotacao = soup.find('span', class_='txt-quotation').strong.text.strip()
 
+        # Obtendo data e hora atuais
+        now = datetime.now()
+        current_date = now.strftime('%Y-%m-%d')
+        current_time = now.strftime('%H:%M:%S')
 
         data = {
             'title': title,
@@ -43,7 +48,9 @@ def dataCleaning(url):
             'price_usd_max': price_usd_max,
             'price_brl': price_brl,
             'price_ars': price_ars,
-            'dolar_cotacao': dolar_cotacao
+            'dolar_cotacao': dolar_cotacao,
+            'current_date': current_date,
+            'current_time': current_time
         }
 
         return data

@@ -38,6 +38,10 @@ app.post('/notify', (req, res) => {
     res.status(200).json({ message: 'Produto adicionado com sucesso!' });
 });
 
+app.post('/chart', (req, res) => {
+    
+});
+
 app.get('/pedeLink', (req, res) => {
     res.send(link);
 });
