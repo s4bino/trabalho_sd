@@ -4,6 +4,10 @@
 # Arquivos de log
 *.log
 
+.gitignore
+
+src/pageCompras.html
+
 # Arquivos de ambiente
 .env
 .env.*

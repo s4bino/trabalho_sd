@@ -3,79 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Price Over Time Chart</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            width: 80%;
-            max-width: 800px;
-        }
-        canvas {
-            background: #ffffff;
-        }
-    </style>
+    <title>Preço do Produto</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Price Over Time</h1>
-        <canvas id="priceOverTimeChart"></canvas>
+    <div style="width: 80%; margin: 0 auto;">
+        <h2>Variação do Preço do Produto</h2>
+        <div id="priceChart"></div>
     </div>
 
     <script>
-        const ctx = document.getElementById('priceOverTimeChart').getContext('2d');
-        const priceOverTimeChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [
-                    '2024-08-01',
-                    '2024-08-02',
-                    '2024-08-03',
-                    '2024-08-04',
-                    '2024-08-05',
-                    '2024-08-06',
-                    '2024-08-07'
-                ],
-                datasets: [{
-                    label: 'Price in USD',
-                    data: [820, 825, 830, 840, 850, 860, 870],
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    fill: true,
-                    tension: 0.1
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Date'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Price (USD)'
-                        },
-                        beginAtZero: true
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: true
-                    }
-                }
-            }
-        });
+        function updateChart(data) {
+            console.log(data);
+            const labels = data.map(entry => entry.time);
+            const prices = data.map(entry => entry.price);
+
+            const trace = {
+                x: labels,
+                y: prices,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Preço do Produto',
+                line: {color: 'rgba(75, 192, 192, 1)'}
+            };
+
+            const layout = {
+                title: 'Variação do Preço do Produto',
+                xaxis: {title: 'Tempo'},
+                yaxis: {title: 'Preço'}
+            };
+
+            Plotly.newPlot('priceChart', [trace], layout);
+        }
+
+        // Fetch histórico de preços a cada 5 segundos
+        setInterval(() => {
+            fetch('/api/produtos')
+                .then(response => response.json())
+                .then(data => updateChart(data));
+        }, 5000);
     </script>
 </body>
 </html>

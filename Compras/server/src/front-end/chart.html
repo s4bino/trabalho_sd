@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preço do Produto</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div style="width: 80%; margin: 0 auto;">
+        <h2>Variação do Preço do Produto</h2>
+        <div id="priceChart"></div>
+    </div>
+
+    <script>
+        function updateChart(data) {
+            console.log(data);
+            const labels = data.map(entry => entry.time);
+            const prices = data.map(entry => parseFloat(entry.price.replace('US$ ', '').replace('.', '').replace(',', '.')));
+
+            const trace = {
+                x: labels,
+                y: prices,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Preço do Produto',
+                line: {color: 'rgba(75, 192, 192, 1)'}
+            };
+
+            const layout = {
+                title: 'Variação do Preço do Produto',
+                xaxis: {title: 'Tempo'},
+                yaxis: {title: 'Preço'}
+            };
+
+            Plotly.newPlot('priceChart', [trace], layout);
+        }
+
+        // Fetch histórico de preços a cada 5 segundos
+        setInterval(() => {
+            fetch('/api/produtos')
+                .then(response => response.json())
+                .then(data => updateChart(data));
+        }, 5000);
+    </script>
+</body>
+</html>

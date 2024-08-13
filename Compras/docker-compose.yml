@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  node:
+    build:
+      context: ./server
+    ports:
+      - "3000:3000"
+
+  python:
+    build:
+      context: ./scrapping
+    depends_on:
+      - node

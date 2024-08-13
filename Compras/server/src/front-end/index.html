@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Monitoramento</title>
+        <link rel="stylesheet" href="styles.css">
+
+    </head>
+    <body>
+        <div class="container">
+            <h1>Acompanhe um Produto!</h1>
+            <form id="eventForm">
+                <div class="form-group">
+                    <input type="text" id="link" name="link" placeholder="link do produto" >
+                </div>
+                
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="seu email para ser notificado" >
+                </div>
+
+                <div class="form-group">
+                    <input type="number" id="valor" name="valor" placeholder="menor ou igual que esse valor para notificar" >
+                </div>
+            
+                <button type="submit"><B>Adicionar</B></button>
+            </form>
+            <p id="errorMessage" class="error"></p>
+        </div>
+    </body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('eventForm');
+        const errorMessage = document.getElementById('errorMessage');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Evita o envio padrão do formulário
+
+                // Obtém os valores dos campos
+                const link = document.getElementById('link').value;
+                const email = document.getElementById('email').value;
+                const valor = document.getElementById('valor').value;
+
+                // Verifica se todos os campos estão preenchidos
+                if (!link || !email || !valor) {
+                    errorMessage.textContent = 'Por favor, preencha todos os campos.';
+                    return;
+                }
+
+                try {
+                    // Envia os dados para o servidor
+                    const response = await fetch('/notify', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            link,
+                            email,
+                            valor,
+                        }),
+                    });
+
+                    if (response.ok) {
+                        // Caso a resposta seja positiva, você pode lidar com a confirmação aqui
+                        alert('Produto adicionado com sucesso!');
+                    } else {
+                        // Caso contrário, mostra uma mensagem de erro
+                        errorMessage.textContent = 'Erro ao adicionar o produto. Tente novamente.';
+                    }
+                } catch (error) {
+                    // Se ocorrer algum erro na requisição, mostra a mensagem
+                    errorMessage.textContent = 'Erro de rede. Verifique sua conexão.';
+                }
+            });
+        });
+
+    </script>
+</html>
+
+
